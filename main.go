@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"database/sql"
-	"github.com/lib/pq"
-
 	"fmt"
+	"github.com/lib/pq"
 	"log"
 	"net/http"
 	"os"
@@ -103,6 +102,23 @@ func deleteFibonacciTable(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//The same function but it returns an int, and gets rid of the http and response
+func getFibonacciNumberForTesting(position int) int {
+
+	var Fibonaccis []int
+	fibonacciPosition := 0
+
+	fibonacciPosition = position
+
+	if fibonacciPosition > 46 {
+		fmt.Println("Out of Integer bounds")
+	}
+	Fibonaccis = make([]int, fibonacciPosition)
+	Fibonaccis = fibonacci(fibonacciPosition)
+
+	return Fibonaccis[fibonacciPosition]
+}
+
 func getFibonacciNumber(w http.ResponseWriter, r *http.Request) {
 	pathParams := mux.Vars(r)
 	w.Header().Set("Content-Type", "application/json")
@@ -122,7 +138,7 @@ func getFibonacciNumber(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, err = w.Write([]byte(`{"message": "Please use a number in your URL params"}`))
 			if err != nil {
-				return
+				panic(err)
 			}
 			return
 		}
@@ -130,7 +146,7 @@ func getFibonacciNumber(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			_, err = w.Write([]byte(`{"message": "Please use a number less than 47"}`))
 			if err != nil {
-				return
+				panic(err)
 			}
 			return
 		}
@@ -142,8 +158,22 @@ func getFibonacciNumber(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write([]byte(fmt.Sprintf(`{"Fib(%d)==%d"}`, fibonacciPosition, Fibonaccis[fibonacciPosition])))
 	if err != nil {
-		return
+		panic(err)
 	}
+}
+
+func getNumbersLessThanForTesting(lessThanNum int) int {
+
+	fibonacci := []int{0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377}
+	lessThan := 0
+
+	for i := 0; i < len(fibonacci); i++ {
+		if lessThanNum > fibonacci[i] {
+			lessThan++
+		}
+	}
+
+	return lessThan
 }
 
 func getNumbersLessThan(w http.ResponseWriter, r *http.Request) {

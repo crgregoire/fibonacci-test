@@ -37,3 +37,12 @@ Here are the routes:
     localhost:8080/api/v1/fibonacci/delete-all
             // ^ deletes the fibonacci sequences
 ```
+
+This program also contains tests. If you'd like to run all tests then use the command:
+```go
+go test *.go
+```
+
+If you would like, there are tests designed to fail in `main_test.go` but they must be commented back in.
+
+Thanks!
